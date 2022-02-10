@@ -16,7 +16,7 @@
 ## 使用：
 
 ```
-cd 项目根目录 go run main.go # 启动服务
+下载可执行文件https://github.com/1458790210/RedisCview/releases
 
 不需要windows窗口执行：go build -ldflags "-s -w -H=windowsgui"
 ```
