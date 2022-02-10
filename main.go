@@ -274,8 +274,7 @@ func main() {
 	//	t, _ := template.ParseFiles("index.html")
 	//	// 设置模板数据
 	//	data := map[string]interface{}{
-	//		"User": "小韩说课",
-	//		"List": []string{"Go", "Python", "PHP", "JavaScript"},
+	//		"List": []string{"Go", "PHP", "JavaScript"},
 	//	}
 	//	// 渲染模板，发送响应
 	//	_ = t.Execute(w, data)
