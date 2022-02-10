@@ -3,8 +3,8 @@
  web 与命令行的 redis 管理工具
 
 <p align="center">
-  <img src="https://github.com/1458790210/RedisCview/blob/master/web.png">
-  <img src="https://github.com/1458790210/RedisCview/blob/master/client.png">
+  <img src="https://github.com/1458790210/RedisCview/blob/main/web.png" >
+  <img src="https://github.com/1458790210/RedisCview/blob/main/client.png" >
 </p>
 
 ## 特性：
