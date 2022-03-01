@@ -8,12 +8,14 @@ import (
 	"flag"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"github.com/zserge/lorca"
 	"io/ioutil"
 	"net/http"
 	"os"
-	"os/exec"
+	"os/signal"
 	"strconv"
 	"strings"
+	"syscall"
 )
 
 type Result struct {
@@ -307,12 +309,11 @@ func main() {
 	http.HandleFunc("/update_system_configs", UpdateSystemConfigs)
 
 	//打开浏览器
-	cmd := exec.Command("explorer", "http://127.0.0.1:9681")
-	err := cmd.Start()
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
+	//cmd := exec.Command("explorer", "http://127.0.0.1:9681")
+	//err := cmd.Start()
+	//if err != nil {
+	//	fmt.Println(err.Error())
+	//}
 
 	Try(func() {
 		go handle()
@@ -321,7 +322,16 @@ func main() {
 
 	})
 
+	//使用桌面程序
 	_ = http.ListenAndServe(":9681", nil)
+	ui, _ := lorca.New("http://127.0.0.1:9681", "", 1600, 1020)
+	chaSignal := make(chan os.Signal, 1)
+	signal.Notify(chaSignal, syscall.SIGINT, syscall.SIGTERM)
+	select {
+	case <-ui.Done():
+	case <-chaSignal:
+	}
+	ui.Close()
 }
 
 func NewCli(w http.ResponseWriter, r *http.Request) {
