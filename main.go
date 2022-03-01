@@ -324,7 +324,7 @@ func main() {
 
 	//使用桌面程序
 	_ = http.ListenAndServe(":9681", nil)
-	ui, _ := lorca.New("http://127.0.0.1:9681", "", 1600, 1020)
+	ui, _ := lorca.New("http://127.0.0.1:9681", "", 1600, 1020, "--disable-sync", " --disable-translate")
 	chaSignal := make(chan os.Signal, 1)
 	signal.Notify(chaSignal, syscall.SIGINT, syscall.SIGTERM)
 	select {
