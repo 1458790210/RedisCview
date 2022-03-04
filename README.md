@@ -1,15 +1,14 @@
 # RedisCview
 
- web 与命令行的 redis 管理工具
+ Redis 可视化客户端
 
 <p align="center">
   <img src="https://github.com/1458790210/RedisCview/blob/main/web.png" >
-  <img src="https://github.com/1458790210/RedisCview/blob/main/client.png" >
 </p>
 
 ## 特性：
 
-1. 提供websocket、命令行窗口、web界面三种方式
+1. 提供命令行窗口、界面
 2. 单文件可执行，无需安装配置
 3. 简洁美观的操作界面
 

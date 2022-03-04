@@ -23,7 +23,7 @@ var globalConfigs GlobalConfigStruct
 
 // _configFilePath 配置文件路径
 var configPath = "./conf.json"
-var defaultConfig = []byte(`{"servers":[{"id":1,"name":"localhost","host":"127.0.0.1","port":6379,"auth":"","dbNums":15}],"system":{"connectionTimeout":10,"executionTimeout":10,"keyScanLimits":1000,"rowScanLimits":1000,"delRowLimits":1000}}`)
+var defaultConfig = []byte(`{"servers":[{"id":1,"name":"localhost","host":"127.0.0.1","port":6379,"auth":"","dbNums":15}],"system":{"connectionTimeout":10,"executionTimeout":10,"keyScanLimits":100,"rowScanLimits":100,"delRowLimits":100}}`)
 
 func init() {
 	_, err := os.Stat(configPath)
