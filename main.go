@@ -793,7 +793,7 @@ const AddForm = `<!DOCTYPE html>
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js"></script>
 </head>
-<body style="cursor: auto;" class="devpreview sourcepreview">
+<body style="cursor: auto;" class="devpreview sourcepreview" oncontextmenu="return false">
 <div class="container">
     <div class="row clearfix">
         <div class="col-md-12 column" style="margin-top: 0;padding: 0;margin-bottom: 0">
@@ -1155,6 +1155,11 @@ const AddForm = `<!DOCTYPE html>
 </div>
 
 <script>
+	function stop(){
+		return false;
+	}
+	document.oncontextmenu=stop;
+
     $(document).ready(function () {
         $(".remove_key").click(function () {
             if (confirm("确定删除该键？")) {
