@@ -17,5 +17,6 @@
 ```
 下载可执行文件https://github.com/1458790210/RedisCview/releases
 
+代码编译：
 不需要windows窗口执行：go build -ldflags "-s -w -H=windowsgui"
 ```

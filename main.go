@@ -4,11 +4,14 @@ import (
 	"RedisCview/lib"
 	"bufio"
 	"bytes"
+	"embed"
+	_ "embed"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"github.com/gorilla/websocket"
 	"github.com/zserge/lorca"
+	"io/fs"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -269,24 +272,29 @@ func Try(fun func(), handler func(interface{})) {
 	fun()
 }
 
-func main() {
-	// 设置 处理函数
-	//http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	//	// 解析模板
-	//	t, _ := template.ParseFiles("index.html")
-	//	// 设置模板数据
-	//	data := map[string]interface{}{
-	//		"List": []string{"Go", "PHP", "JavaScript"},
-	//	}
-	//	// 渲染模板，发送响应
-	//	_ = t.Execute(w, data)
-	//})
+//go:embed frontend/*
+var embededFiles embed.FS
 
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/html")
-		fmt.Fprint(w, AddForm)
-		return
-	})
+func getFileSystem(useOS bool) http.FileSystem {
+	if useOS {
+		return http.FS(os.DirFS("static"))
+	}
+
+	fsys, err := fs.Sub(embededFiles, "frontend")
+	if err != nil {
+		panic(err)
+	}
+	return http.FS(fsys)
+}
+
+func main() {
+	http.Handle("/", http.FileServer(getFileSystem(false)))
+
+	//http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+	//	w.Header().Set("Content-Type", "text/html")
+	//	fmt.Fprint(w, AddForm)
+	//	return
+	//})
 
 	http.HandleFunc("/query_servers", func(w http.ResponseWriter, r *http.Request) {
 		OutputJson(w, 1, 100, "操作成功", lib.QueryServers())
