@@ -18,7 +18,7 @@ import (
 	"os/signal"
 	"strconv"
 	"strings"
-	"syscall"
+	"sync"
 )
 
 type Result struct {
@@ -290,12 +290,6 @@ func getFileSystem(useOS bool) http.FileSystem {
 func main() {
 	http.Handle("/", http.FileServer(getFileSystem(false)))
 
-	//http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-	//	w.Header().Set("Content-Type", "text/html")
-	//	fmt.Fprint(w, AddForm)
-	//	return
-	//})
-
 	http.HandleFunc("/query_servers", func(w http.ResponseWriter, r *http.Request) {
 		OutputJson(w, 1, 100, "操作成功", lib.QueryServers())
 		return
@@ -316,13 +310,6 @@ func main() {
 	http.HandleFunc("/info_cli", InfoCli)
 	http.HandleFunc("/update_system_configs", UpdateSystemConfigs)
 
-	//打开浏览器
-	//cmd := exec.Command("explorer", "http://127.0.0.1:9681")
-	//err := cmd.Start()
-	//if err != nil {
-	//	fmt.Println(err.Error())
-	//}
-
 	Try(func() {
 		go handle()
 		http.HandleFunc("/ws", wsHandler)
@@ -331,15 +318,27 @@ func main() {
 	})
 
 	//使用桌面程序
-	_ = http.ListenAndServe(":9681", nil)
-	ui, _ := lorca.New("http://127.0.0.1:9681", "", 1600, 1020, "--disable-sync", " --disable-translate")
-	chaSignal := make(chan os.Signal, 1)
-	signal.Notify(chaSignal, syscall.SIGINT, syscall.SIGTERM)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	start := make(chan int)
+	end := make(chan interface{})
+	go func() {
+		_ = http.ListenAndServe(":9681", nil)
+	}()
+	go func(start chan int, quit chan interface{}) {
+		ui, _ := lorca.New("http://127.0.0.1:9681", "", 1600, 1020, "--disable-sync", " --disable-translate")
+		defer ui.Close()
+		quit <- (<-ui.Done())
+	}(start, end)
+	signalChannel := make(chan os.Signal, 1)
+	signal.Notify(signalChannel, os.Interrupt)
 	select {
-	case <-ui.Done():
-	case <-chaSignal:
+	case <-signalChannel:
+		wg.Done()
+	case <-end:
+		wg.Done()
 	}
-	ui.Close()
+	wg.Wait()
 }
 
 func NewCli(w http.ResponseWriter, r *http.Request) {
